@@ -4,7 +4,14 @@ import torch
 from torch import nn
 from torch.nn.utils import prune
 from torchvision import models
+import sys
+import os
 
+# 获取当前文件的上级目录路径
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# 将上级目录路径添加到 sys.path
+sys.path.append(parent_dir)
 from gnnrl.graph_env.feedback_calculation import top5validate
 from gnnrl.graph_env.network_pruning import real_pruning, channel_pruning
 from gnnrl.utils.split_dataset import get_dataset

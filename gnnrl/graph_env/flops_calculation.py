@@ -52,8 +52,14 @@ def preserve_flops(Flops,preserve_ratio,model_name,a):
         for i in range(3, len(flops)):
             if i+1<len(flops):
                 flops[i] *= preserve_ratio[i -2 ]
+
+    # elif model_name == 'vgg16':
+    #     flops = flops * np.array(preserve_ratio).reshape(-1)
+    #     for i in range(1, len(flops)):
+    #         flops[i] *= preserve_ratio[i - 1]
+
     else:
-        raise NotImplementedError
+        raise NotImplementedError(f"Model {model_name} is not implemented in preserve_flops")
     return flops
 def flops_caculation_forward(net, model_name, input_x, preserve_ratio=None):
     # TODO layer flops

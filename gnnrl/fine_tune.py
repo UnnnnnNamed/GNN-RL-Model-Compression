@@ -3,7 +3,14 @@ import time
 import argparse
 import shutil
 import math
+import sys
+import os
 
+# 获取当前文件的上级目录路径
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# 将上级目录路径添加到 sys.path
+sys.path.append(parent_dir)
 import torch
 import torch.nn as nn
 import numpy as np

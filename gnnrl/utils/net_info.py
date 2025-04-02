@@ -40,6 +40,8 @@ def get_num_hidden_layer(net,model_name):
         for name, module in net.named_modules():
             if isinstance(module, nn.Conv2d):
                 n_layer+=1
+        print('layer_share:{};n_layer:{}'.format(layer_share,n_layer))
+
     elif model_name == 'vgg16':
         for name, module in net.named_modules():
             if isinstance(module, nn.Conv2d):

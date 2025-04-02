@@ -28,6 +28,7 @@ def load_model(model_name,data_root=None,device=None):
         net = torch.nn.DataParallel(net)
         path = os.path.join(package_directory,'..','networks', "pretrained_models",'cifar10', 'resnet110.th')
         checkpoint = torch.load(path, map_location=device)
+        print('path:{}'.format(path))
         net.load_state_dict(checkpoint['state_dict'])
 
     elif model_name == "resnet32":

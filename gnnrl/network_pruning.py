@@ -3,7 +3,14 @@ import os
 import torch.backends.cudnn as cudnn
 import torch
 import logging
+import sys
+import os
 
+# 获取当前文件的上级目录路径
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# asldkjasldk
+# 将上级目录路径添加到 sys.path
+sys.path.append(parent_dir)
 from search import search
 from gnnrl.lib.RL.agent import Agent
 from parameter import parse_args
@@ -148,6 +155,7 @@ if __name__ == "__main__":
     cudnn.benchmark = True
 
     n_layer,layer_share = get_num_hidden_layer(net,args.model)
+    print(args.max_episodes)
 
     if args.dataset == "imagenet":
         path = args.data_root
@@ -161,7 +169,7 @@ if __name__ == "__main__":
         path = os.path.join(args.data_root, "datasets")
 
         train_loader, val_loader, n_class = get_split_train_valset_CIFAR(args.dataset, args.data_bsize, args.n_worker, args.train_size, args.val_size,
-                                                                         data_root=path, use_real_val=False,
+                                                                         data_root=path, use_real_val=True,
                                                                          shuffle=True)
         input_x = torch.randn([1,3,32,32]).to(device)
     elif args.dataset == "cifar100":

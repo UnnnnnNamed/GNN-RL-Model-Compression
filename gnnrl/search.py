@@ -18,7 +18,7 @@ def transfer_policy_search():
     return
 
 def search(env,agent, update_timestep,max_timesteps, max_episodes,
-           log_interval=10, solved_reward=None, random_seed=None):
+           log_interval=10, solved_reward=None, random_seed=None, log_dir=None):
     print("Search Start")
     ############## Hyperparameters ##############
     print('Hyperparameters')
@@ -87,14 +87,21 @@ def search(env,agent, update_timestep,max_timesteps, max_episodes,
         # stop training if avg_reward > solved_reward
         if (i_episode % log_interval) != 0 and running_reward / (i_episode % log_interval) > (solved_reward):
             print("########## Solved! ##########")
-            torch.save(agent.policy.state_dict(), './rl_solved_{}.pth'.format(env_name))
+
+            save_path = os.path.join(log_dir, 'rl_solved_{}.pth'.format(env_name))
+            torch.save(agent.policy.state_dict(), save_path)
             break
 
         # save every 500 episodes
         if i_episode % 500 == 0:
-            torch.save(agent.policy.state_dict(), './'  + '_rl_{}.pth'.format(env_name))
-            torch.save(agent.policy.actor.state_dict(), './'+'_rl_actor_{}.pth'.format(env_name))
-            torch.save(agent.policy.critic.state_dict(), './'+'_rl_critic_{}.pth'.format(env_name))
+            # save_path = os.path.join(log_dir, '_rl_{}.pth'.format(env_name))
+            torch.save(agent.policy.state_dict(), f'{log_dir}/_rl_{env_name}.pth')
+            torch.save(agent.policy.actor.state_dict(), f'{log_dir}/_rl_actor_{env_name}.pth')
+            torch.save(agent.policy.critic.state_dict(), f'{log_dir}/_rl_critic_{env_name}.pth')
+
+
+
+
         # logging
         if i_episode % log_interval == 0:
             avg_length = int(avg_length / log_interval)
@@ -103,6 +110,30 @@ def search(env,agent, update_timestep,max_timesteps, max_episodes,
             print('Episode {} \t Avg length: {} \t Avg reward: {}'.format(i_episode, avg_length, running_reward))
             running_reward = 0
             avg_length = 0
+
+            # import fine_tune as ft
+            # from gnnrl.graph_env.network_pruning import  channel_pruning
+            # from gnnrl.networks import resnet
+            # from torch import optim
+            # from gnnrl.utils.split_dataset import get_dataset
+            # print("Start Fine-Tune")
+            #
+            # # net = resnet.__dict__['resnet56']()
+            # # # net = torch.nn.DataParallel(net,list(range(args.n_gpu)))
+            # net = channel_pruning(net, torch.ones(100, 1))
+            #
+            # net.load_state_dict(agent.policy.state_dict())
+            # optimizer = optim.SGD(net.parameters(), lr=0.0003, momentum=0.9, weight_decay=4e-5)
+            # train_loader, val_loader, n_class = get_dataset('cifar10', 256, 4,
+            #                                                 data_root='data/datasets')
+            #
+            # for epoch in range(0, f_epochs):
+            #     lr = ft.adjust_learning_rate(optimizer, epoch)
+            #     ft.train(epoch, train_loader)
+            #     ft.test(epoch, val_loader)
+
+            # if use_cuda and args.n_gpu > 1:
+            #     net = torch.nn.DataParallel(net)
 
         # # 新增中间奖励机制（每10步记录一次）
         # if i_episode % log_interval == 0:
